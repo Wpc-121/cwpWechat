@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.time.LocalDateTime;
@@ -55,9 +56,11 @@ public class CounterController {
    * @return API response json
    */
   @PostMapping(value = "/api/count")
-  ApiResponse create(@RequestBody CounterRequest request) {
+  ApiResponse create(@RequestBody CounterRequest request, @RequestHeader(value = "X-WX-OPENID	") String openidString,
+            @RequestHeader(value = "X-WX-UNIONID") String unionId) {
     logger.info("/api/count post request, action: {}", request.getAction());
-
+    logger.info("request openis is : {}", openidString);
+    logger.info("request unionId is : {}", unionId);
     Optional<Counter> curCounter = counterService.getCounter(1);
     if (request.getAction().equals("inc")) {
       Integer count = 1;
