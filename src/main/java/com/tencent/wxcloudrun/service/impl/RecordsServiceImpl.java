@@ -1,9 +1,12 @@
 package com.tencent.wxcloudrun.service.impl;
 
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.tencent.wxcloudrun.Tools;
 import com.tencent.wxcloudrun.config.ApiResponse;
+import com.tencent.wxcloudrun.japEntity.JzIcons;
 import com.tencent.wxcloudrun.japEntity.JzRecords;
+import com.tencent.wxcloudrun.japRepository.JzIconsRepostitory;
 import com.tencent.wxcloudrun.japRepository.JzRecordsRepostitory;
 import com.tencent.wxcloudrun.service.RecordsService;
 import com.tencent.wxcloudrun.utils.MyStringUtil;
@@ -13,7 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.util.*;
 
 @Service
 public class RecordsServiceImpl implements RecordsService {
@@ -22,6 +25,8 @@ public class RecordsServiceImpl implements RecordsService {
     final Tools tools;
     final SimpleDateFormat simpleDateFormat;
 
+    @Autowired
+    JzIconsRepostitory jzIconsRepostitory;
     public RecordsServiceImpl(@Autowired  JzRecordsRepostitory jzRecordsRepostitory, @Autowired Tools tools) {
         this.logger = LoggerFactory.getLogger(RecordsServiceImpl.class);
         this.jzRecordsRepostitory = jzRecordsRepostitory;
@@ -42,12 +47,65 @@ public class RecordsServiceImpl implements RecordsService {
             jzRecords.setRecId(recId);
             jzRecordsRepostitory.save(jzRecords);
         }else {
+            jzRecords.setRecDel("0");
             logger.info("-----recid is not null ---update records----");
             jzRecordsRepostitory.save(jzRecords);
         }
         rsp.put("code","1111");
         rsp.put("msg","success");
         rsp.put("recId", recId);
+        return ApiResponse.ok(rsp);
+    }
+
+    @Override
+    public ApiResponse queryAllRecords(JSONObject req) {
+        JSONObject rsp = new JSONObject();
+        String openId = req.getString("openid");
+        SimpleDateFormat daysdf = new SimpleDateFormat("yyyy/MM/dd");
+        String today = daysdf.format(new Date());
+        List<Map<String, Object>> groupRecords = new ArrayList<>();
+        rsp.put("income", "0.00");
+        rsp.put("outcome", "0.00");
+        if(!MyStringUtil.isNullOrEmpty(openId)){
+            logger.info("----openid is not null----{}", openId);
+            groupRecords = jzRecordsRepostitory.queryRecordsGroupWithOpenid(openId);
+        }else{
+            logger.info("----openid is null ----");
+            groupRecords = jzRecordsRepostitory.queryRecordsGroupWithOutOpenid();
+        }
+        List<Map<String,Object>> recordsByDayList  = jzRecordsRepostitory.queryRecordsGroupByDay();
+        JSONArray retRecs = new JSONArray();
+        if(null!=recordsByDayList && recordsByDayList.size()>0){
+            for(int i=0;i< recordsByDayList.size();i++){
+                Map<String, Object> map = new HashMap<>(recordsByDayList.get(i));
+                String day = (String) map.get("rec_date");
+                List<Map<String,Object>> rows = jzRecordsRepostitory.queryDayRecordsByDay(day);
+                map.put("myrows", rows);
+                retRecs.add(map);
+            }
+        }
+        if(null!=groupRecords && groupRecords.size()>0){
+            for(Map<String,Object> map : groupRecords){
+                logger.info("------group records: {}",JSONObject.toJSONString(map));
+                String jztype = (String) map.get("rec_type");
+                String money = (String) map.get("total");
+                if("1".equals(jztype)){
+                    rsp.put("income" ,money);
+                }else{
+                    rsp.put("outcome" ,money);
+                }
+            }
+        }
+        rsp.put("records", retRecs);
+
+        return ApiResponse.ok(rsp);
+    }
+
+    @Override
+    public ApiResponse queryAllIcons(JSONObject req) {
+        JSONObject rsp = new JSONObject();
+        List<JzIcons> iconsList = jzIconsRepostitory.queryAllIcons();
+        rsp.put("icons",iconsList);
         return ApiResponse.ok(rsp);
     }
 }

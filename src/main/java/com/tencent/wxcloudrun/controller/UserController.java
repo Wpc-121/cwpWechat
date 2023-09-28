@@ -5,6 +5,7 @@ import com.tencent.wxcloudrun.config.ApiResponse;
 import com.tencent.wxcloudrun.japEntity.JzUsers;
 import com.tencent.wxcloudrun.japRepository.jzUserRepostitory;
 import com.tencent.wxcloudrun.service.RecordsService;
+import com.tencent.wxcloudrun.service.TypeService;
 import com.tencent.wxcloudrun.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,12 +23,15 @@ import javax.annotation.Resource;
 public class UserController {
     final UserService userService;
     final RecordsService recordsService;
+    final TypeService typeService;
     final Logger logger;
 
-    public UserController(@Autowired UserService userService, @Autowired RecordsService recordsService) {
+    public UserController(@Autowired UserService userService, @Autowired RecordsService recordsService,
+                          @Autowired TypeService typeService) {
         this.logger = LoggerFactory.getLogger(UserController.class);
         this.userService = userService;
         this.recordsService = recordsService;
+        this.typeService = typeService;
     }
 
     @PostMapping("/userLogin")
@@ -38,5 +42,25 @@ public class UserController {
     @PostMapping("/recordEdit")
     public ApiResponse editRecord(@RequestBody JSONObject req){
         return recordsService.addRecords(req);
+    }
+
+    @PostMapping("/queryRecords")
+    public ApiResponse queryAllRecord(@RequestBody JSONObject req){
+        return recordsService.queryAllRecords(req);
+    }
+
+    @PostMapping("/addType")
+    public ApiResponse addType(@RequestBody JSONObject req){
+        return typeService.addType(req);
+    }
+
+        @PostMapping("/queryTypes")
+    public ApiResponse queryTypes(@RequestBody JSONObject req){
+        return typeService.queryAllTypes(req);
+    }
+
+    @PostMapping("/queryIcons")
+    public ApiResponse queryIcons(@RequestBody JSONObject req){
+        return recordsService.queryAllIcons(req);
     }
 }

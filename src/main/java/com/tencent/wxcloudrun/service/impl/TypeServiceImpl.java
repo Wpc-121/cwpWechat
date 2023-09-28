@@ -11,6 +11,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.Map;
+
 
 @Service
 public class TypeServiceImpl implements TypeService {
@@ -29,6 +32,7 @@ public class TypeServiceImpl implements TypeService {
         String addtype = req.getString("typefather");
         JzTypes jzTypes = new JzTypes();
         String typeId = tools.getSeq("seq","TP");
+        req.put("typeId", typeId);
         jzTypes = JSONObject.toJavaObject(req, JzTypes.class);
         if("1".equals(addtype)){
             logger.info("-----addtype is {}----","father "+ addtype);
@@ -42,6 +46,11 @@ public class TypeServiceImpl implements TypeService {
 
     @Override
     public ApiResponse queryAllTypes(JSONObject req) {
-        return null;
+        List<Map<String,Object>> jzTypes = jzTypeRepostitory.queryAllTypesAndIcons("1");
+        List<Map<String,Object>> jzInTypes = jzTypeRepostitory.queryAllTypesAndIcons("2");
+        JSONObject rsp = new JSONObject();
+        rsp.put("outTypes", jzTypes);
+        rsp.put("inTypes", jzInTypes);
+        return ApiResponse.ok(rsp);
     }
 }
