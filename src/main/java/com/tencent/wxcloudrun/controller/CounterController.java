@@ -56,7 +56,7 @@ public class CounterController {
    * @return API response json
    */
   @PostMapping(value = "/api/count")
-  ApiResponse create(@RequestBody CounterRequest request, @RequestHeader(value = "X-WX-OPENID	") String openidString,
+  ApiResponse create(@RequestBody CounterRequest request, @RequestHeader(value = "X-WX-OPENID") String openidString,
             @RequestHeader(value = "X-WX-UNIONID") String unionId) {
     logger.info("/api/count post request, action: {}", request.getAction());
     logger.info("request openis is : {}", openidString);
