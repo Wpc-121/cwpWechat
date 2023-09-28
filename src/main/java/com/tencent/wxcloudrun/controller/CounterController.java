@@ -56,11 +56,9 @@ public class CounterController {
    * @return API response json
    */
   @PostMapping(value = "/api/count")
-  ApiResponse create(@RequestBody CounterRequest request, @RequestHeader(value = "X-WX-OPENID") String openidString,
-            @RequestHeader(value = "X-WX-UNIONID") String unionId) {
+  ApiResponse create(@RequestBody CounterRequest request, @RequestHeader(value = "X-WX-OPENID") String openidString) {
     logger.info("/api/count post request, action: {}", request.getAction());
     logger.info("request openis is : {}", openidString);
-    logger.info("request unionId is : {}", unionId);
     Optional<Counter> curCounter = counterService.getCounter(1);
     if (request.getAction().equals("inc")) {
       Integer count = 1;
