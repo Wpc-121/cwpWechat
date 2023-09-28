@@ -37,7 +37,9 @@ public class RecordsServiceImpl implements RecordsService {
     @Override
     public ApiResponse addRecords(JSONObject req) {
         JSONObject rsp = new JSONObject();
+        String openid = req.getString("openid");
         JzRecords jzRecords = JSONObject.toJavaObject(req, JzRecords.class);
+        jzRecords.setRecOwnerid(openid);
         String recId = jzRecords.getRecId();
         String now = simpleDateFormat.format(new Date());
         jzRecords.setRecBornTime(now);
