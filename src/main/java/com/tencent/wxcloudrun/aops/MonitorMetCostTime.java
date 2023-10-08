@@ -32,7 +32,7 @@ public class MonitorMetCostTime {
         log.info("------seqno is-------{}",seqno);
         Object ret = joinPoint.proceed();
         try {
-            return joinPoint.proceed();
+            return ret;
         }finally {
             long end = System.currentTimeMillis();
             log.info("-----rspis: "+ JSONObject.toJSONString(ret));

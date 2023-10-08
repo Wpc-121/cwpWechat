@@ -63,25 +63,30 @@ public class RecordsServiceImpl implements RecordsService {
     public ApiResponse queryAllRecords(JSONObject req) {
         JSONObject rsp = new JSONObject();
         String openId = req.getString("openid");
-        SimpleDateFormat daysdf = new SimpleDateFormat("yyyy/MM/dd");
-        String today = daysdf.format(new Date());
+        String queryDate = req.getString("queryDate");
+        SimpleDateFormat daysdf = new SimpleDateFormat("yyyy/MM");
+        String queryEndDate = "";
+        if(MyStringUtil.isNullOrEmpty(queryDate)){
+            queryDate = daysdf.format(new Date());
+        }
+        queryEndDate = queryDate + "/33";
         List<Map<String, Object>> groupRecords = new ArrayList<>();
         rsp.put("income", "0.00");
         rsp.put("outcome", "0.00");
         if(!MyStringUtil.isNullOrEmpty(openId)){
             logger.info("----openid is not null----{}", openId);
-            groupRecords = jzRecordsRepostitory.queryRecordsGroupWithOpenid(openId);
+            groupRecords = jzRecordsRepostitory.queryRecordsGroupWithOpenid(openId,queryDate,queryEndDate);
         }else{
             logger.info("----openid is null ----");
             groupRecords = jzRecordsRepostitory.queryRecordsGroupWithOutOpenid();
         }
-        List<Map<String,Object>> recordsByDayList  = jzRecordsRepostitory.queryRecordsGroupByDay();
+        List<Map<String,Object>> recordsByDayList  = jzRecordsRepostitory.queryRecordsGroupByDay(openId,queryDate,queryEndDate);
         JSONArray retRecs = new JSONArray();
         if(null!=recordsByDayList && recordsByDayList.size()>0){
             for(int i=0;i< recordsByDayList.size();i++){
                 Map<String, Object> map = new HashMap<>(recordsByDayList.get(i));
                 String day = (String) map.get("rec_date");
-                List<Map<String,Object>> rows = jzRecordsRepostitory.queryDayRecordsByDay(day);
+                List<Map<String,Object>> rows = jzRecordsRepostitory.queryDayRecordsByDay(day,openId);
                 map.put("myrows", rows);
                 retRecs.add(map);
             }
@@ -91,7 +96,7 @@ public class RecordsServiceImpl implements RecordsService {
                 logger.info("------group records: {}",JSONObject.toJSONString(map));
                 String jztype = (String) map.get("rec_type");
                 String money = (String) map.get("total");
-                if("1".equals(jztype)){
+                if("2".equals(jztype)){
                     rsp.put("income" ,money);
                 }else{
                     rsp.put("outcome" ,money);
