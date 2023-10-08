@@ -43,7 +43,7 @@ public class ConAdv implements RequestBodyAdvice {
             String s=new String(bytes);
             JSONObject reqBody = JSONObject.parseObject(s);
             JSONObject headers = JSONObject.parseObject(JSONObject.toJSONString(httpInputMessage.getHeaders()));
-            String openid = headers.getString("X-WX-OPENID");
+            String openid = headers.getString("x-wx-openid");
             if(MyStringUtil.isNullOrEmpty(openid)){
                 log.info("---openid is null ----");
                 openid = "oW8cq5N9DtR6EGTGzcHu6KXKlW8U";
