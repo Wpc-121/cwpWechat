@@ -50,6 +50,7 @@ public class ConAdv implements RequestBodyAdvice {
             }
             reqBody.put("openid",openid);
             reqBod = JSONObject.toJSONString(reqBody);
+            log.info("req body is :  "+ reqBod);
         }
         log.info("---headers---"+JSONObject.toJSONString(httpInputMessage.getHeaders()));
 
