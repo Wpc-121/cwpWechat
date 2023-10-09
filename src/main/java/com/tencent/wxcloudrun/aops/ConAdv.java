@@ -1,5 +1,6 @@
 package com.tencent.wxcloudrun.aops;
 
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.tencent.wxcloudrun.config.ApiResponse;
 import com.tencent.wxcloudrun.utils.MyStringUtil;
@@ -47,6 +48,10 @@ public class ConAdv implements RequestBodyAdvice {
             if(MyStringUtil.isNullOrEmpty(openid)){
                 log.info("---openid is null ----");
                 openid = "oW8cq5N9DtR6EGTGzcHu6KXKlW8U";
+            }else {
+                JSONArray openids = JSONArray.parseArray(openid);
+                openid = openids.getString(0);
+                log.info("------openid is -----"+openid);
             }
             reqBody.put("openid",openid);
             reqBod = JSONObject.toJSONString(reqBody);
