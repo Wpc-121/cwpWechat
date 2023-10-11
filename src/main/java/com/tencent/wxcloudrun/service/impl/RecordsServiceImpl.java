@@ -283,6 +283,7 @@ public class RecordsServiceImpl implements RecordsService {
                     Map<String,Object> newMap = new HashMap<>(map);
                     String outMoney = (String) map.get("outMoney");
                     String inMoney = (String) map.get("inMoney");
+                    logger.info("---outMoney--"+outMoney+"--inMoney--"+inMoney);
                     if(!"0".equals(outMoney)){
                         logger.info("-----out money----");
                         String percent = tools.multiplyBigDecimal(tools.divideBigDecimal(outMoney,totalOut,2),"100");

@@ -62,8 +62,8 @@ public interface JzRecordsRepostitory extends CrudRepository<JzRecords, Long> {
     @Query(value = "select a.outMoney,a.inMoney,jt.typename,jt.jz_base64  from (\n" +
             " select    jr.rec_jz_type_id ,cast(sum(case jr.rec_type when '1' then jr .rec_money else 0 end) as char ) outMoney,\n" +
             " cast(sum(case jr.rec_type when '2' then jr .rec_money else 0 end) as char ) inMoney\n" +
-            " from jz_records jr where jr.rec_ownerid =?1 and (jr.rec_date >= ?2 \"  +\n" +
-            "            \"             and jr.rec_date<=?3)  group by jr.rec_jz_type_id \n" +
+            " from jz_records jr where jr.rec_ownerid =?1 and (jr.rec_date >= ?2  \n" +
+            "                        and jr.rec_date<=?3)  group by jr.rec_jz_type_id \n" +
             " ) a left join (\n" +
             " select jt.typeid ,jt.typename ,ji.jz_base64  FROM jz_types jt left join jz_icons ji on jt.typeicon =ji.jz_iconid \n" +
             " ) jt on a.rec_jz_type_id= jt.typeid  order by a.outMoney+0 desc ,a.inMoney+0 desc" ,nativeQuery = true)
