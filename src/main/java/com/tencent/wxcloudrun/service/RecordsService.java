@@ -7,4 +7,5 @@ public interface RecordsService {
     ApiResponse addRecords(JSONObject req);
     ApiResponse queryAllRecords(JSONObject req);
     ApiResponse queryAllIcons(JSONObject req);
+    ApiResponse queryDiagram(JSONObject req);
 }

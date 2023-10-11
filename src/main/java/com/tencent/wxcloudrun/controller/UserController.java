@@ -62,4 +62,10 @@ public class UserController {
     public ApiResponse queryIcons(@RequestBody JSONObject req){
         return recordsService.queryAllIcons(req);
     }
+
+    @MetCost("queryDiagram")
+    @PostMapping("/queryDiagram")
+    public ApiResponse queryDiagram(@RequestBody JSONObject req){
+        return recordsService.queryDiagram(req);
+    }
 }

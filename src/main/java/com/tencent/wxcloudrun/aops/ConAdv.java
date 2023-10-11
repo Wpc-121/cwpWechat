@@ -2,7 +2,6 @@ package com.tencent.wxcloudrun.aops;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.tencent.wxcloudrun.config.ApiResponse;
 import com.tencent.wxcloudrun.utils.MyStringUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -85,9 +84,10 @@ public class ConAdv implements RequestBodyAdvice {
         return o;
     }
     @ExceptionHandler
-    public ApiResponse gloablExceptionHandler(Exception e){
+    public Object gloablExceptionHandler(Exception e){
         JSONObject body = new JSONObject();
         body.put("retmsg",e.getMessage());
-        return ApiResponse.error(e.getMessage());
+        log.info("----Exception--"+JSONObject.toJSONString(e));
+        return e.getMessage();
     }
 }
