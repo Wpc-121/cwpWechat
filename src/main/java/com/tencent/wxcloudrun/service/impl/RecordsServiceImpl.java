@@ -160,8 +160,8 @@ public class RecordsServiceImpl implements RecordsService {
                     if(in !=-1){
                         String outMoney = (String) map.get("outMoney");
                         String inMoney = (String) map.get("inMoney");
-                        weekDataOut.add(in, outMoney);
-                        weekDataIn.add(in, inMoney);
+                        weekDataOut.set(in, outMoney);
+                        weekDataIn.set(in, inMoney);
                     }
                 }
             }
@@ -210,8 +210,8 @@ public class RecordsServiceImpl implements RecordsService {
                     if(in !=-1){
                         String outMoney = (String) map.get("outMoney");
                         String inMoney = (String) map.get("inMoney");
-                        monthDayOut.add(in, outMoney);
-                        monthDayIn.add(in, inMoney);
+                        monthDayOut.set(in, outMoney);
+                        monthDayIn.set(in, inMoney);
                     }
                 }
             }
@@ -250,8 +250,8 @@ public class RecordsServiceImpl implements RecordsService {
                 if(in !=-1){
                     String outMoney = (String) map.get("outMoney");
                     String inMoney = (String) map.get("inMoney");
-                    yearDatayOut.add(in, outMoney);
-                    yearDatayIn.add(in, inMoney);
+                    yearDatayOut.set(in, outMoney);
+                    yearDatayIn.set(in, inMoney);
                 }
             }
         }
