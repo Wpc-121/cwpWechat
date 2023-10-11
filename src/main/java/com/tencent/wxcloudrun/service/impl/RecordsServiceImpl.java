@@ -184,8 +184,8 @@ public class RecordsServiceImpl implements RecordsService {
         JSONArray months = new JSONArray();
         for(int i=0; i<2;i++ ){
             JSONObject everyMonth = new JSONObject();
-            String currMonth = (Integer.valueOf(month)-i)+"";
-            String monthStart = tools.getWeekStart(formatPar,currMonth);
+            String currMonth = (Integer.valueOf(month)-i)<10?("0"+(Integer.valueOf(month)-i)):(Integer.valueOf(month)-i)+"";
+            String monthStart = year+"/"+currMonth;
             String monthEnd = tools.getMonthEnd(formatPar,currMonth);
             JSONArray monthdays = tools.getMonthDays(currMonth);
             JSONArray monthDayOut = new JSONArray();
