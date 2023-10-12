@@ -33,6 +33,18 @@ public class UserController {
         return userService.userlogin(req);
     }
 
+    @MetCost("userAdd")
+    @PostMapping("/userAdd")
+    public ApiResponse userAdd(@RequestBody JSONObject req){
+        return userService.userAdd(req);
+    }
+
+    @MetCost("userQuery")
+    @PostMapping("/userQuery")
+    public ApiResponse userQuery(@RequestBody JSONObject req){
+        return userService.userQuery(req);
+    }
+
     @MetCost("recordEdit")
     @PostMapping("/recordEdit")
     public ApiResponse editRecord(@RequestBody JSONObject req){

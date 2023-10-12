@@ -10,14 +10,14 @@ import java.io.Serializable;
 /**
  * @Description  
  * @Author  linmengmeng
- * @Date 2023-09-19 10:37:40 
+ * @Date 2023-10-12 17:06:11 
  */
 
 @Entity
 @Table ( name ="jz_users" , schema = "")
 public class JzUsers  implements Serializable {
 
-	private static final long serialVersionUID =  3289176248748482068L;
+	private static final long serialVersionUID =  7590550043187131675L;
 
 	/**
 	 * 用户openid
@@ -37,6 +37,9 @@ public class JzUsers  implements Serializable {
 
    	@Column(name = "userlatesttime" )
 	private String userlatesttime;
+
+   	@Column(name = "userava" )
+	private String userava;
 
 	public String getUseropenid() {
 		return this.useropenid;
@@ -78,6 +81,14 @@ public class JzUsers  implements Serializable {
 		this.userlatesttime = userlatesttime;
 	}
 
+	public String getUserava() {
+		return this.userava;
+	}
+
+	public void setUserava(String userava) {
+		this.userava = userava;
+	}
+
 	@Override
 	public String toString() {
 		return "{" +
@@ -86,6 +97,7 @@ public class JzUsers  implements Serializable {
 					"userphone='" + userphone + '\'' +
 					"userregtime='" + userregtime + '\'' +
 					"userlatesttime='" + userlatesttime + '\'' +
+					"userava='" + userava + '\'' +
 				'}';
 	}
 
