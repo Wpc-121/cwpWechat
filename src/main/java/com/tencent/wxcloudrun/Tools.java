@@ -284,6 +284,8 @@ public class Tools {
 
     public JSONObject httpToWechat(JSONObject req,String servicePath){
         String url = wechatUrl + servicePath;
+        logger.info("---httpToWechat--"+servicePath);
+        logger.info("-------req--"+req);
         String res = HttpUtil.post(url,req);
         JSONObject rsp = new JSONObject();
         rsp = JSONObject.parseObject(res);
