@@ -80,4 +80,9 @@ public class UserController {
     public ApiResponse queryDiagram(@RequestBody JSONObject req){
         return recordsService.queryDiagram(req);
     }
+    @MetCost("addIcon")
+    @PostMapping("/addIcon")
+    public ApiResponse addIcon(@RequestBody JSONObject req){
+        return recordsService.addIcon(req);
+    }
 }

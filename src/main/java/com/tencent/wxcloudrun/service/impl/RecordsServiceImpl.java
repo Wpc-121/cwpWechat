@@ -276,8 +276,11 @@ public class RecordsServiceImpl implements RecordsService {
         String openid = req.getString("openid");
         String iconurl = req.getString("iconurl");
         String iconname = req.getString("iconname");
+        String fileId = req.getString("fileId");
         String iconid = tools.getSeq("seq","ICON");
-        String iconbase64 = tools.imageUrlToBase64(iconurl);
+        String fileUrl = tools.getDownUrlFromWechatCloud(fileId);
+        logger.info("----file down url is -"+fileUrl);
+        String iconbase64 = tools.imageUrlToBase64(fileUrl);
         JzIcons jzIcons = new JzIcons();
         jzIcons.setJzIconid(iconid);
         jzIcons.setJzIconOwner(openid);

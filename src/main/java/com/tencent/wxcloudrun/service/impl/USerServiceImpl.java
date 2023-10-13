@@ -35,9 +35,10 @@ public class USerServiceImpl implements UserService {
         String openid = req.getString("openid");
         JzUsers jzUsers = new JzUsers();
         jzUsers.setUseropenid(openid);
-        jzUserRepostitory.save(jzUsers);
+        JzUsers byUseropenid = jzUserRepostitory.findByUseropenid(openid);
         String seqno = tools.getSeq("seq", "REQ");
         req.put("seqno", seqno);
+        req.put("userInfo",byUseropenid);
         return ApiResponse.ok(req);
     }
 
