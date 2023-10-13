@@ -50,6 +50,9 @@ public class JzTypes  implements Serializable {
    	@Column(name = "typeaddtime" )
 	private String typeaddtime;
 
+   	@Column(name = "typeowner" )
+	private String typeowner;
+
 	/**
 	 * 1-支出  2-收入
 	 */
@@ -118,6 +121,13 @@ public class JzTypes  implements Serializable {
 
 	public void setTypeaddtime(String typeaddtime) {
 		this.typeaddtime = typeaddtime;
+	}
+	public String getTypeowner() {
+		return this.typeowner;
+	}
+
+	public void setTypeowner(String typeowner) {
+		this.typeowner = typeowner;
 	}
 
 	public String getType() {

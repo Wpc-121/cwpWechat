@@ -30,10 +30,12 @@ public class TypeServiceImpl implements TypeService {
     @Override
     public ApiResponse addType(JSONObject req) {
         String addtype = req.getString("typefather");
+        String openid = req.getString("openid");
         JzTypes jzTypes = new JzTypes();
         String typeId = tools.getSeq("seq","TP");
         req.put("typeId", typeId);
         jzTypes = JSONObject.toJavaObject(req, JzTypes.class);
+        jzTypes.setTypeowner(openid);
         if("1".equals(addtype)){
             logger.info("-----addtype is {}----","father "+ addtype);
         }else {
@@ -46,8 +48,9 @@ public class TypeServiceImpl implements TypeService {
 
     @Override
     public ApiResponse queryAllTypes(JSONObject req) {
-        List<Map<String,Object>> jzTypes = jzTypeRepostitory.queryAllTypesAndIcons("1");
-        List<Map<String,Object>> jzInTypes = jzTypeRepostitory.queryAllTypesAndIcons("2");
+        String openid = req.getString("openid");
+        List<Map<String,Object>> jzTypes = jzTypeRepostitory.queryAllTypesAndIcons("1",openid);
+        List<Map<String,Object>> jzInTypes = jzTypeRepostitory.queryAllTypesAndIcons("2",openid);
         JSONObject rsp = new JSONObject();
         rsp.put("outTypes", jzTypes);
         rsp.put("inTypes", jzInTypes);

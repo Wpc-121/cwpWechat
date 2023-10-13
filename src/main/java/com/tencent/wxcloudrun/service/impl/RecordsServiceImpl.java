@@ -111,7 +111,8 @@ public class RecordsServiceImpl implements RecordsService {
     @Override
     public ApiResponse queryAllIcons(JSONObject req) {
         JSONObject rsp = new JSONObject();
-        List<JzIcons> iconsList = jzIconsRepostitory.queryAllIcons();
+        String openId = req.getString("openid");
+        List<JzIcons> iconsList = jzIconsRepostitory.queryAllIcons(openId);
         rsp.put("icons",iconsList);
         return ApiResponse.ok(rsp);
     }
