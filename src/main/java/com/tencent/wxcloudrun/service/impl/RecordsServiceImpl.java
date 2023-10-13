@@ -271,6 +271,22 @@ public class RecordsServiceImpl implements RecordsService {
         return ApiResponse.ok(rsp);
     }
 
+    @Override
+    public ApiResponse addIcon(JSONObject req) {
+        String openid = req.getString("openid");
+        String iconurl = req.getString("iconurl");
+        String iconname = req.getString("iconname");
+        String iconid = tools.getSeq("seq","ICON");
+        String iconbase64 = tools.imageUrlToBase64(iconurl);
+        JzIcons jzIcons = new JzIcons();
+        jzIcons.setJzIconid(iconid);
+        jzIcons.setJzIconOwner(openid);
+        jzIcons.setJzIconurl(iconname);
+        jzIcons.setJzBase64(iconbase64);
+        JzIcons jzIcons1 = jzIconsRepostitory.save(jzIcons);
+        return ApiResponse.ok(jzIcons1);
+    }
+
     public  void getRecordsRank(JSONObject req,String openid, String weekStart,String weekEnd){
         logger.info("----getRecordsRank----"+weekEnd+"-----"+weekStart);
         List<Map<String, Object>> recordsRank = jzRecordsRepostitory.queryRecordsSumByType(openid,weekStart,weekEnd);

@@ -1,11 +1,14 @@
 package com.tencent.wxcloudrun;
 
+import cn.hutool.http.HttpUtil;
 import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import com.tencent.wxcloudrun.japRepository.QueryBySqlRepository;
 import com.tencent.wxcloudrun.utils.MyStringUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.io.ByteArrayOutputStream;
@@ -31,6 +34,12 @@ public class Tools {
         this.logger = LoggerFactory.getLogger(Tools.class);
         this.queryBySqlRepository = queryBySqlRepository;
     }
+
+    @Value("${cwp.wechatUrl}")
+    private String wechatUrl;
+
+    @Value("${cwp.wechatCloudEnvId}")
+    private String envId;
 
     public  String getSeq(String seq, String startWith){
         logger.info("-----get into getseq : {}, start with:{}", seq,startWith);
@@ -271,5 +280,46 @@ public class Tools {
         Pattern p = Pattern.compile(reg);
         Matcher m = p.matcher(str);
         return "data:image/png;base64,"+m.replaceAll("");
+    }
+
+    public JSONObject httpToWechat(JSONObject req,String servicePath){
+        String url = wechatUrl + servicePath;
+        String res = HttpUtil.post(url,req);
+        JSONObject rsp = new JSONObject();
+        rsp = JSONObject.parseObject(res);
+        return rsp;
+    }
+
+    public String getDownUrlFromWechatCloud(String fileid){
+     /*   {
+            "env": "test2-4a89da",
+                "file_list": [
+                {
+                "fileid":"cloud://test2-4a89da.7465-test2-4a89da/A.png",
+                    "max_age":7200
+                }
+            ]
+        }
+    }*/
+        JSONObject file = new JSONObject();
+        file.put("fileid",fileid);
+        file.put("max_age", 7200);
+        JSONArray files = new JSONArray();
+        files.add(file);
+        JSONObject req = new JSONObject();
+        req.put("env", envId);
+        req.put("file_list",files);
+        JSONObject rsp = httpToWechat(req,"tcb/batchdownloadfile");
+        int errocode = (int) rsp.get("errcode");
+        if(errocode ==0 ){
+            JSONArray fileList = rsp.getJSONArray("file_list");
+            file = fileList.getJSONObject(0);
+            logger.info("-----rsp file is : "+file);
+            String downloadUrl = file.getString("download_url");
+            return downloadUrl;
+        }else{
+            logger.info("---request to wechat fail----"+errocode);
+            return null;
+        }
     }
 }

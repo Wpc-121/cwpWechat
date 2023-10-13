@@ -10,6 +10,7 @@ import org.apache.tomcat.util.http.fileupload.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.text.SimpleDateFormat;
@@ -23,6 +24,8 @@ public class USerServiceImpl implements UserService {
         this.logger = LoggerFactory.getLogger(USerServiceImpl.class);
         this.jzUserRepostitory = jzUserRepostitory;
     }
+    @Value("${cwp.wechatCloudEnvId}")
+    private String envId;
 
     @Autowired
     Tools tools;
@@ -43,8 +46,11 @@ public class USerServiceImpl implements UserService {
         String openid = req.getString("openid");
         String nickname = req.getString("nickname");
         String avaurl = req.getString("ava");
+        String fileId = req.getString("fileId");
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
-        String headImgBase64 = tools.imageUrlToBase64(avaurl);
+        String fileUrl = tools.getDownUrlFromWechatCloud(fileId);
+        logger.info("----file down url is -"+fileUrl);
+        String headImgBase64 = tools.imageUrlToBase64(fileUrl);
         JzUsers jzUsers = new JzUsers();
         jzUsers.setUseropenid(openid);
         jzUsers.setUsername(nickname);
