@@ -85,4 +85,13 @@ public class UserController {
     public ApiResponse addIcon(@RequestBody JSONObject req){
         return recordsService.addIcon(req);
     }
+
+    @MetCost("getAnId")
+    @PostMapping("/getAnId")
+    public ApiResponse getAnId(@RequestBody JSONObject req){
+        return recordsService.getAnId(req);
+    }
+
+
+
 }
