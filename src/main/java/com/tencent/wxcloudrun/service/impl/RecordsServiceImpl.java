@@ -13,6 +13,8 @@ import com.tencent.wxcloudrun.utils.MyStringUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.text.SimpleDateFormat;
@@ -289,6 +291,16 @@ public class RecordsServiceImpl implements RecordsService {
         jzIcons.setJzBase64(iconbase64);
         JzIcons jzIcons1 = jzIconsRepostitory.save(jzIcons);
         return ApiResponse.ok(jzIcons1);
+    }
+
+    @Override
+    public ApiResponse getAnId(JSONObject req) {
+
+        String id = tools.getSeq("seq","CDQ");
+        Page<Map<String, Object>> maps = jzRecordsRepostitory.queryDayRecordsByPage("oW8cq5N9DtR6EGTGzcHu6KXKlW8U", PageRequest.of(1, 10));
+        req.put("data", maps);
+        req.put("id",id);
+        return ApiResponse.ok(req);
     }
 
     public  void getRecordsRank(JSONObject req,String openid, String weekStart,String weekEnd){

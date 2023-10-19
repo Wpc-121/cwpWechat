@@ -1,6 +1,8 @@
 package com.tencent.wxcloudrun.japRepository;
 
 import com.tencent.wxcloudrun.japEntity.JzRecords;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 
@@ -69,5 +71,8 @@ public interface JzRecordsRepostitory extends CrudRepository<JzRecords, Long> {
             " ) jt on a.rec_jz_type_id= jt.typeid  order by a.outMoney+0 desc ,a.inMoney+0 desc" ,nativeQuery = true)
     List<Map<String,Object>> queryRecordsSumByType(String openId,String queryDate,String queryEndDate);
 
+
+    @Query(value = "select * from jz_records jr where jr.rec_ownerid =?1 " ,nativeQuery = true)
+    Page<Map<String, Object>> queryDayRecordsByPage(String openId, Pageable pageable);
 
 }
