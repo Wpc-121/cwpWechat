@@ -93,5 +93,11 @@ public class UserController {
     }
 
 
+    @MetCost("addLifeShow")
+    @PostMapping("/addLifeShow")
+    public ApiResponse addLifeShow(@RequestBody JSONObject req){
+        return recordsService.addLifeShow(req);
+    }
+
 
 }
