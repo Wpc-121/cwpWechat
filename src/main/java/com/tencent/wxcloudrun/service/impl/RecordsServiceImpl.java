@@ -1,5 +1,6 @@
 package com.tencent.wxcloudrun.service.impl;
 
+import cn.hutool.http.HttpUtil;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.tencent.wxcloudrun.Tools;
@@ -17,6 +18,7 @@ import com.tencent.wxcloudrun.utils.MyStringUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -39,6 +41,12 @@ public class RecordsServiceImpl implements RecordsService {
 
     @Autowired
     JzFilesRepostitory jzFilesRepostitory;
+
+    @Value("${cwp.tianxingurl}")
+    String tianxingUrl;
+
+    @Value("${cwp.tianxingkey}")
+    String tianxingkey;
 
     public RecordsServiceImpl(@Autowired  JzRecordsRepostitory jzRecordsRepostitory, @Autowired Tools tools) {
         this.logger = LoggerFactory.getLogger(RecordsServiceImpl.class);
@@ -341,6 +349,15 @@ public class RecordsServiceImpl implements RecordsService {
             jzFilesRepostitory.saveAll(jzFilesList);
         }
         return ApiResponse.ok();
+    }
+
+    @Override
+    public ApiResponse getTangshi(JSONObject req) {
+        logger.info("----getTangshi----");
+        String url = tianxingUrl+"pyqwenan/index?key="+tianxingkey;
+        String post = HttpUtil.post(url, new HashMap<>());
+
+        return ApiResponse.ok(JSONObject.parseObject(post));
     }
 
     public  void getRecordsRank(JSONObject req,String openid, String weekStart,String weekEnd){
