@@ -98,6 +98,11 @@ public class UserController {
     public ApiResponse addLifeShow(@RequestBody JSONObject req){
         return recordsService.addLifeShow(req);
     }
+    @MetCost("getTangshi")
+    @PostMapping("/getTangshi")
+    public ApiResponse getTangshi(@RequestBody JSONObject req){
+        return recordsService.getTangshi(req);
+    }
 
 
 }
