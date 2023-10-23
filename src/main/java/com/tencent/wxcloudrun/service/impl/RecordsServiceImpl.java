@@ -4,9 +4,13 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.tencent.wxcloudrun.Tools;
 import com.tencent.wxcloudrun.config.ApiResponse;
+import com.tencent.wxcloudrun.japEntity.JzFiles;
 import com.tencent.wxcloudrun.japEntity.JzIcons;
+import com.tencent.wxcloudrun.japEntity.JzLifeShow;
 import com.tencent.wxcloudrun.japEntity.JzRecords;
+import com.tencent.wxcloudrun.japRepository.JzFilesRepostitory;
 import com.tencent.wxcloudrun.japRepository.JzIconsRepostitory;
+import com.tencent.wxcloudrun.japRepository.JzLifeShowRepostitory;
 import com.tencent.wxcloudrun.japRepository.JzRecordsRepostitory;
 import com.tencent.wxcloudrun.service.RecordsService;
 import com.tencent.wxcloudrun.utils.MyStringUtil;
@@ -29,6 +33,13 @@ public class RecordsServiceImpl implements RecordsService {
 
     @Autowired
     JzIconsRepostitory jzIconsRepostitory;
+
+    @Autowired
+    JzLifeShowRepostitory jzLifeShowRepostitory;
+
+    @Autowired
+    JzFilesRepostitory jzFilesRepostitory;
+
     public RecordsServiceImpl(@Autowired  JzRecordsRepostitory jzRecordsRepostitory, @Autowired Tools tools) {
         this.logger = LoggerFactory.getLogger(RecordsServiceImpl.class);
         this.jzRecordsRepostitory = jzRecordsRepostitory;
@@ -297,10 +308,39 @@ public class RecordsServiceImpl implements RecordsService {
     public ApiResponse getAnId(JSONObject req) {
 
         String id = tools.getSeq("seq","CDQ");
-        Page<Map<String, Object>> maps = jzRecordsRepostitory.queryDayRecordsByPage("oW8cq5N9DtR6EGTGzcHu6KXKlW8U", PageRequest.of(1, 10));
-        req.put("data", maps);
         req.put("id",id);
         return ApiResponse.ok(req);
+    }
+
+    @Override
+    public ApiResponse addLifeShow(JSONObject req) {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+        JzLifeShow jzLifeShow = new JzLifeShow();
+        String seq = req.getString("seq");
+        String text = req.getString("text");
+        String openid = req.getString("openid");
+        JSONArray files = req.getJSONArray("files");
+        jzLifeShow.setLifeShowId(seq);
+        jzLifeShow.setLifeShowMedinum(files.size()+"");
+        jzLifeShow.setLifeShowOwnerid(openid);
+        jzLifeShow.setLifeShowStatus("1");
+        jzLifeShow.setLifeShowTime(sdf.format(new Date()));
+        jzLifeShow.setLifeShowText(text);
+        jzLifeShowRepostitory.save(jzLifeShow);
+        if(null!=files && files.size()>0){
+            logger.info("-----files size :"+files.size());
+            List<JzFiles> jzFilesList = new ArrayList<>();
+            for(int i =0; i< files.size();i++){
+                JSONObject fi = files.getJSONObject(i);
+                JzFiles jzFiles = new JzFiles();
+                jzFiles.setJzId(seq);
+                jzFiles.setJzFileOrder(i+"");
+                jzFiles.setJzFileUrl(fi.getString("url"));
+                jzFilesList.add(jzFiles);
+            }
+            jzFilesRepostitory.saveAll(jzFilesList);
+        }
+        return ApiResponse.ok();
     }
 
     public  void getRecordsRank(JSONObject req,String openid, String weekStart,String weekEnd){
