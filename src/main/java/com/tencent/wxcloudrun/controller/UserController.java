@@ -27,6 +27,14 @@ public class UserController {
         this.typeService = typeService;
     }
 
+    @MetCost("recvMsg")
+    @PostMapping("/recvMsg")
+    public String recvMsg(@RequestBody JSONObject req){
+        logger.info("------recvMsg---req： "+ req);
+        return "success";
+    }
+
+
     @MetCost("userLogin")
     @PostMapping("/userLogin")
     public ApiResponse userLogin(@RequestBody JSONObject req){
