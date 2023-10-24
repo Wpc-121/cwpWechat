@@ -360,6 +360,20 @@ public class RecordsServiceImpl implements RecordsService {
         return ApiResponse.ok(JSONObject.parseObject(post));
     }
 
+    @Override
+    public ApiResponse sendMsg(JSONObject req) {
+        String openid = req.getString("openid");
+        JSONObject msg = new JSONObject();
+        JSONObject text = new JSONObject();
+        text.put("content","test");
+        msg.put("touser",openid);
+        msg.put("msgtype","text");
+        msg.put("text",text);
+        JSONObject jsonObject = tools.httpToWechat(msg, "/cgi-bin/message/custom/send");
+
+        return ApiResponse.ok(jsonObject);
+    }
+
     public  void getRecordsRank(JSONObject req,String openid, String weekStart,String weekEnd){
         logger.info("----getRecordsRank----"+weekEnd+"-----"+weekStart);
         List<Map<String, Object>> recordsRank = jzRecordsRepostitory.queryRecordsSumByType(openid,weekStart,weekEnd);

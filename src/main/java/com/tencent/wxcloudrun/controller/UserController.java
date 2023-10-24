@@ -34,6 +34,11 @@ public class UserController {
         return "success";
     }
 
+    @MetCost(("sendMsg"))
+    @PostMapping("/sendMsg")
+    public ApiResponse sendMsg(@RequestBody JSONObject req){
+        return recordsService.sendMsg(req);
+    }
 
     @MetCost("userLogin")
     @PostMapping("/userLogin")
