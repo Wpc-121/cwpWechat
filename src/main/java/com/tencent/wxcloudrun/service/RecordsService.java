@@ -13,4 +13,6 @@ public interface RecordsService {
 
     ApiResponse addLifeShow(JSONObject req);
     ApiResponse getTangshi(JSONObject req);
+
+    ApiResponse sendMsg(JSONObject req);
 }
