@@ -300,14 +300,14 @@ public class RecordsServiceImpl implements RecordsService {
         String iconname = req.getString("iconname");
         String fileId = req.getString("fileId");
         String iconid = tools.getSeq("seq","ICON");
-        String fileUrl = tools.getDownUrlFromWechatCloud(fileId);
-        logger.info("----file down url is -"+fileUrl);
-        String iconbase64 = tools.imageUrlToBase64(fileUrl);
+//        String fileUrl = tools.getDownUrlFromWechatCloud(fileId);
+//        logger.info("----file down url is -"+fileUrl);
+//        String iconbase64 = tools.imageUrlToBase64(fileUrl);
         JzIcons jzIcons = new JzIcons();
         jzIcons.setJzIconid(iconid);
         jzIcons.setJzIconOwner(openid);
         jzIcons.setJzIconurl(iconname);
-        jzIcons.setJzBase64(iconbase64);
+        jzIcons.setJzBase64(fileId);
         JzIcons jzIcons1 = jzIconsRepostitory.save(jzIcons);
         return ApiResponse.ok(jzIcons1);
     }
