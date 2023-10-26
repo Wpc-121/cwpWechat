@@ -6,6 +6,7 @@ import com.tencent.wxcloudrun.config.ApiResponse;
 import com.tencent.wxcloudrun.japEntity.JzTypes;
 import com.tencent.wxcloudrun.japRepository.JzTypeRepostitory;
 import com.tencent.wxcloudrun.service.TypeService;
+import com.tencent.wxcloudrun.utils.MyStringUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,10 +33,13 @@ public class TypeServiceImpl implements TypeService {
         String addtype = req.getString("typefather");
         String openid = req.getString("openid");
         JzTypes jzTypes = new JzTypes();
-        String typeId = tools.getSeq("seq","TP");
-        req.put("typeId", typeId);
         jzTypes = JSONObject.toJavaObject(req, JzTypes.class);
         jzTypes.setTypeowner(openid);
+        String typeId = jzTypes.getTypeid();
+        if(MyStringUtil.isNullOrEmpty(typeId)){
+            typeId = tools.getSeq("seq","TP");
+            jzTypes.setTypeid(typeId);
+        }
         if("1".equals(addtype)){
             logger.info("-----addtype is {}----","father "+ addtype);
         }else {

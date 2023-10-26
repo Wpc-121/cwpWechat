@@ -68,9 +68,9 @@ public class RecordsServiceImpl implements RecordsService {
             logger.info("------recid is null or empty----add records---");
             recId = tools.getSeq("seq","REC");
             jzRecords.setRecId(recId);
+            jzRecords.setRecDel("1");
             jzRecordsRepostitory.save(jzRecords);
         }else {
-            jzRecords.setRecDel("0");
             logger.info("-----recid is not null ---update records----");
             jzRecordsRepostitory.save(jzRecords);
         }
@@ -327,11 +327,14 @@ public class RecordsServiceImpl implements RecordsService {
         String seq = req.getString("seq");
         String text = req.getString("text");
         String openid = req.getString("openid");
+        String showFlag = req.getString("openflag");
+        String showStatus = req.getString("showStatus");
         JSONArray files = req.getJSONArray("files");
         jzLifeShow.setLifeShowId(seq);
+        jzLifeShow.setLifeShowSee(showFlag);
         jzLifeShow.setLifeShowMedinum(files.size()+"");
         jzLifeShow.setLifeShowOwnerid(openid);
-        jzLifeShow.setLifeShowStatus("1");
+        jzLifeShow.setLifeShowStatus(showStatus);
         jzLifeShow.setLifeShowTime(sdf.format(new Date()));
         jzLifeShow.setLifeShowText(text);
         jzLifeShowRepostitory.save(jzLifeShow);
@@ -344,6 +347,7 @@ public class RecordsServiceImpl implements RecordsService {
                 jzFiles.setJzId(seq);
                 jzFiles.setJzFileOrder(i+"");
                 jzFiles.setJzFileUrl(fi.getString("url"));
+                jzFiles.setJzFileTime(sdf.format(new Date()));
                 jzFilesList.add(jzFiles);
             }
             jzFilesRepostitory.saveAll(jzFilesList);
