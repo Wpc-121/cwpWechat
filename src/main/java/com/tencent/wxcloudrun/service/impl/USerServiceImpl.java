@@ -49,15 +49,15 @@ public class USerServiceImpl implements UserService {
         String avaurl = req.getString("ava");
         String fileId = req.getString("fileId");
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
-        String fileUrl = tools.getDownUrlFromWechatCloud(fileId);
-        logger.info("----file down url is -"+fileUrl);
-        String headImgBase64 = tools.imageUrlToBase64(fileUrl);
+//        String fileUrl = tools.getDownUrlFromWechatCloud(fileId);
+//        logger.info("----file down url is -"+fileUrl);
+//        String headImgBase64 = tools.imageUrlToBase64(fileUrl);
         JzUsers jzUsers = new JzUsers();
         jzUsers.setUseropenid(openid);
         jzUsers.setUsername(nickname);
         jzUsers.setUserregtime(sdf.format(new Date()));
         jzUsers.setUserlatesttime(sdf.format(new Date()));
-        jzUsers.setUserava(headImgBase64);
+        jzUsers.setUserava(fileId);
         JzUsers save = jzUserRepostitory.save(jzUsers);
         return ApiResponse.ok(save);
     }

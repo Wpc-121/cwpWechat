@@ -68,9 +68,9 @@ public class RecordsServiceImpl implements RecordsService {
             logger.info("------recid is null or empty----add records---");
             recId = tools.getSeq("seq","REC");
             jzRecords.setRecId(recId);
+            jzRecords.setRecDel("1");
             jzRecordsRepostitory.save(jzRecords);
         }else {
-            jzRecords.setRecDel("0");
             logger.info("-----recid is not null ---update records----");
             jzRecordsRepostitory.save(jzRecords);
         }
@@ -300,14 +300,14 @@ public class RecordsServiceImpl implements RecordsService {
         String iconname = req.getString("iconname");
         String fileId = req.getString("fileId");
         String iconid = tools.getSeq("seq","ICON");
-        String fileUrl = tools.getDownUrlFromWechatCloud(fileId);
-        logger.info("----file down url is -"+fileUrl);
-        String iconbase64 = tools.imageUrlToBase64(fileUrl);
+//        String fileUrl = tools.getDownUrlFromWechatCloud(fileId);
+//        logger.info("----file down url is -"+fileUrl);
+//        String iconbase64 = tools.imageUrlToBase64(fileUrl);
         JzIcons jzIcons = new JzIcons();
         jzIcons.setJzIconid(iconid);
         jzIcons.setJzIconOwner(openid);
         jzIcons.setJzIconurl(iconname);
-        jzIcons.setJzBase64(iconbase64);
+        jzIcons.setJzBase64(fileId);
         JzIcons jzIcons1 = jzIconsRepostitory.save(jzIcons);
         return ApiResponse.ok(jzIcons1);
     }
@@ -327,11 +327,14 @@ public class RecordsServiceImpl implements RecordsService {
         String seq = req.getString("seq");
         String text = req.getString("text");
         String openid = req.getString("openid");
+        String showFlag = req.getString("openflag");
+        String showStatus = req.getString("showStatus");
         JSONArray files = req.getJSONArray("files");
         jzLifeShow.setLifeShowId(seq);
+        jzLifeShow.setLifeShowSee(showFlag);
         jzLifeShow.setLifeShowMedinum(files.size()+"");
         jzLifeShow.setLifeShowOwnerid(openid);
-        jzLifeShow.setLifeShowStatus("1");
+        jzLifeShow.setLifeShowStatus(showStatus);
         jzLifeShow.setLifeShowTime(sdf.format(new Date()));
         jzLifeShow.setLifeShowText(text);
         jzLifeShowRepostitory.save(jzLifeShow);
@@ -344,6 +347,7 @@ public class RecordsServiceImpl implements RecordsService {
                 jzFiles.setJzId(seq);
                 jzFiles.setJzFileOrder(i+"");
                 jzFiles.setJzFileUrl(fi.getString("url"));
+                jzFiles.setJzFileTime(sdf.format(new Date()));
                 jzFilesList.add(jzFiles);
             }
             jzFilesRepostitory.saveAll(jzFilesList);
