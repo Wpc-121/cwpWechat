@@ -378,6 +378,25 @@ public class RecordsServiceImpl implements RecordsService {
         return ApiResponse.ok(jsonObject);
     }
 
+    @Override
+    public ApiResponse queryLifeShow(JSONObject req) {
+        String openid = req.getString("openid");
+        String pageNum = req.getString("pageNum");
+        Page<Map<String, Object>> maps = jzLifeShowRepostitory.queryLifeShow(openid, PageRequest.of(Integer.parseInt(pageNum), 10));
+
+        return ApiResponse.ok(maps);
+    }
+
+    @Override
+    public ApiResponse queryRecsByType(JSONObject req) {
+        String openid = req.getString("openid");
+        String start = req.getString("start");
+        String end = req.getString("end");
+        String typeid = req.getString("typeid");
+        List<Map<String, Object>> maps = jzRecordsRepostitory.queryRecordsByTypeId(openid, start, end, typeid);
+        return ApiResponse.ok(maps);
+    }
+
     public  void getRecordsRank(JSONObject req,String openid, String weekStart,String weekEnd){
         logger.info("----getRecordsRank----"+weekEnd+"-----"+weekStart);
         List<Map<String, Object>> recordsRank = jzRecordsRepostitory.queryRecordsSumByType(openid,weekStart,weekEnd);
@@ -390,18 +409,22 @@ public class RecordsServiceImpl implements RecordsService {
                     Map<String,Object> newMap = new HashMap<>(map);
                     String outMoney = (String) map.get("outMoney");
                     String inMoney = (String) map.get("inMoney");
+                    newMap.put("start", weekStart);
+                    newMap.put("end", weekEnd);
                     logger.info("---outMoney--"+outMoney+"--inMoney--"+inMoney);
                     if(!"0".equals(outMoney)){
                         logger.info("-----out money----");
                         String percent = tools.multiplyBigDecimal(tools.divideBigDecimal(outMoney,totalOut,2),"100");
                         newMap.put("percent",percent);
+                        newMap.put("flag","1");
                         rankOut.add(newMap);
                     }
-                    if(!"0".equals(inMoney)){
-                        logger.info("-----in money----");
-                        String percent = tools.multiplyBigDecimal(tools.divideBigDecimal(inMoney,totalIn,2),"100");
-                        newMap.put("percent",percent);
-                        rankIn.add(newMap);
+                if(!"0".equals(inMoney)){
+                    logger.info("-----in money----");
+                    String percent = tools.multiplyBigDecimal(tools.divideBigDecimal(inMoney,totalIn,2),"100");
+                    newMap.put("flag","0");
+                    newMap.put("percent",percent);
+                    rankIn.add(newMap);
                     }
             }
         }

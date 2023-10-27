@@ -15,4 +15,7 @@ public interface RecordsService {
     ApiResponse getTangshi(JSONObject req);
 
     ApiResponse sendMsg(JSONObject req);
+    ApiResponse queryLifeShow(JSONObject req);
+
+    ApiResponse queryRecsByType(JSONObject req);
 }

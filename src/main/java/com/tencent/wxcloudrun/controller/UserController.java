@@ -116,6 +116,15 @@ public class UserController {
     public ApiResponse getTangshi(@RequestBody JSONObject req){
         return recordsService.getTangshi(req);
     }
+    @MetCost("queryLifeShow")
+    @PostMapping("/queryLifeShow")
+    public ApiResponse queryLifeShow(@RequestBody JSONObject req){
+        return recordsService.queryLifeShow(req);
+    }
 
-
+    @MetCost("queryRecsByType")
+    @PostMapping("/queryRecsByType")
+    public ApiResponse queryRecsByType(@RequestBody JSONObject req){
+        return recordsService.queryRecsByType(req);
+    }
 }

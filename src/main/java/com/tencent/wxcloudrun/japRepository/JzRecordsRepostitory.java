@@ -61,7 +61,7 @@ public interface JzRecordsRepostitory extends CrudRepository<JzRecords, Long> {
             "             and jr.rec_date<=?3) " ,nativeQuery = true)
     List<Map<String,Object>> queryRecordsSumByDate(String openId,String queryDate,String queryEndDate);
 
-    @Query(value = "select a.outMoney,a.inMoney,jt.typename,jt.jz_base64  from (\n" +
+    @Query(value = "select a.outMoney,a.inMoney,jt.typename,jt.jz_base64,a.rec_jz_type_id  from (\n" +
             " select    jr.rec_jz_type_id ,cast(sum(case jr.rec_type when '1' then jr .rec_money else 0 end) as char ) outMoney,\n" +
             " cast(sum(case jr.rec_type when '2' then jr .rec_money else 0 end) as char ) inMoney\n" +
             " from jz_records jr where jr.rec_ownerid =?1 and (jr.rec_date >= ?2  \n" +
@@ -70,6 +70,11 @@ public interface JzRecordsRepostitory extends CrudRepository<JzRecords, Long> {
             " select jt.typeid ,jt.typename ,ji.jz_base64  FROM jz_types jt left join jz_icons ji on jt.typeicon =ji.jz_iconid \n" +
             " ) jt on a.rec_jz_type_id= jt.typeid  order by a.outMoney+0 desc ,a.inMoney+0 desc" ,nativeQuery = true)
     List<Map<String,Object>> queryRecordsSumByType(String openId,String queryDate,String queryEndDate);
+
+
+    @Query(value = "select * from jz_records jr where jr.rec_ownerid =?1 and (jr.rec_date >= ?2  " +
+            "   and jr.rec_date<=?3) and jr.rec_jz_type_id =?4 order by jr.rec_money+0 DESC ", nativeQuery = true)
+    List<Map<String , Object>> queryRecordsByTypeId(String openid,String querystartdate,String queryenddate,String typeid);
 
 
     @Query(value = "select * from jz_records jr where jr.rec_ownerid =?1 " ,nativeQuery = true)
