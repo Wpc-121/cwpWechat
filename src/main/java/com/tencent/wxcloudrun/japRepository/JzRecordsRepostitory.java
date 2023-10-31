@@ -31,7 +31,8 @@ public interface JzRecordsRepostitory extends CrudRepository<JzRecords, Long> {
             " group by jr.rec_date order by jr.rec_date DESC " ,nativeQuery = true)
     List<Map<String,Object>> queryRecordsGroupByDay(String openId,String queryDate,String queryEndDate);
 
-    @Query(value = "select * from jz_records jr left join \n" +
+    @Query(value = "select jr.*,jt.typeid ,jt.typename ,jt.jz_base64,case when length(jr.rec_mark)=0 then jt.typename else jr.rec_mark end ntypename" +
+            "  from jz_records jr left join \n" +
             " (SELECT jt.typeid ,jt.typename ,ji.jz_base64  FROM jz_types jt " +
             " left join jz_icons ji on jt.typeicon =ji.jz_iconid) jt on jr.rec_jz_type_id =jt.typeid \n" +
             " where jr.rec_del='1' and rec_date =?1 and rec_ownerid =?2" +
