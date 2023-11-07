@@ -7,4 +7,6 @@ public interface UserService {
     ApiResponse userlogin(JSONObject req);
     ApiResponse userAdd(JSONObject req);
     ApiResponse userQuery(JSONObject req);
+    ApiResponse editTags(JSONObject req);
+    ApiResponse queryTags(JSONObject req);
 }

@@ -14,18 +14,18 @@ public interface JzRecordsRepostitory extends CrudRepository<JzRecords, Long> {
     List<JzRecords> findJzRecordsByRecBornTimeAfterOrderByRecBornTimeDesc(String today);
 
 
-    @Query(value = "select jr.rec_type,cast(sum(jr.rec_money) as char ) total from jz_records jr " +
+    @Query(value = "select jr.rec_type,cast(ROUND(sum(jr.rec_money),2) as char ) total from jz_records jr " +
             " where jr.rec_ownerid =?1 and jr.rec_del='1' and (jr.rec_date > ?2" +
             " and jr.rec_date<?3)  group by jr.rec_type" ,nativeQuery = true)
     List<Map<String, Object>> queryRecordsGroupWithOpenid(String openid,String queryDate,String queryEndDate );
 
-    @Query(value = "select jr.rec_type,cast(sum(jr.rec_money) as char )  total from jz_records jr " +
+    @Query(value = "select jr.rec_type,cast(ROUND(sum(jr.rec_money) as char )  total from jz_records jr " +
             "  group by jr.rec_type" ,nativeQuery = true)
     List<Map<String, Object>> queryRecordsGroupWithOutOpenid();
 
     @Query(value = "select jr.rec_date, " +
-            " cast(sum(case jr.rec_type when '1' then jr .rec_money else 0 end) as char ) outMoney,\n" +
-            " cast(sum(case jr.rec_type when '2' then jr .rec_money else 0 end) as char ) inMoney\n" +
+            " cast(ROUND(sum(case jr.rec_type when '1' then jr .rec_money else 0 end),2) as char ) outMoney,\n" +
+            " cast(ROUND(sum(case jr.rec_type when '2' then jr .rec_money else 0 end),2) as char ) inMoney\n" +
             " from jz_records jr  where jr.rec_del='1' and    rec_ownerid =?1 and (jr.rec_date > ?2 "  +
             "             and jr.rec_date<?3) " +
             " group by jr.rec_date order by jr.rec_date DESC " ,nativeQuery = true)
@@ -40,31 +40,31 @@ public interface JzRecordsRepostitory extends CrudRepository<JzRecords, Long> {
     List<Map<String, Object>> queryDayRecordsByDay(String day,String openId);
 
     @Query(value = "select jr.rec_date, " +
-            " cast(sum(case jr.rec_type when '1' then jr .rec_money else 0 end) as char ) outMoney,\n" +
-            " cast(sum(case jr.rec_type when '2' then jr .rec_money else 0 end) as char ) inMoney\n" +
+            " cast(ROUND(sum(case jr.rec_type when '1' then jr .rec_money else 0 end),2) as char ) outMoney,\n" +
+            " cast(ROUND(sum(case jr.rec_type when '2' then jr .rec_money else 0 end),2) as char ) inMoney\n" +
             " from jz_records jr  where   rec_ownerid =?1 and (jr.rec_date >= ?2 "  +
             "             and jr.rec_date<=?3) " +
             " group by jr.rec_date order by jr.rec_date DESC " ,nativeQuery = true)
     List<Map<String,Object>> queryRecordsGroupByWeekDay(String openId,String queryDate,String queryEndDate);
 
     @Query(value = "select SUBSTR( jr.rec_date,1,7) rec_date, " +
-            " cast(sum(case jr.rec_type when '1' then jr .rec_money else 0 end) as char ) outMoney,\n" +
-            " cast(sum(case jr.rec_type when '2' then jr .rec_money else 0 end) as char ) inMoney\n" +
+            " cast(ROUND(sum(case jr.rec_type when '1' then jr .rec_money else 0 end),2) as char ) outMoney,\n" +
+            " cast(ROUND(sum(case jr.rec_type when '2' then jr .rec_money else 0 end),2) as char ) inMoney\n" +
             " from jz_records jr  where   rec_ownerid =?1 and (jr.rec_date >= ?2 "  +
             "             and jr.rec_date<=?3) " +
             " group by SUBSTR( jr.rec_date,1,7) " ,nativeQuery = true)
     List<Map<String,Object>> queryRecordsGroupByYear(String openId,String queryDate,String queryEndDate);
 
     @Query(value = "select   " +
-            " ifnull(cast(sum(case jr.rec_type when '1' then jr .rec_money else 0 end) as char ), '0.00') outMoney,\n" +
-            " ifnull(cast(sum(case jr.rec_type when '2' then jr .rec_money else 0 end) as char ), '0.00') inMoney\n" +
+            " ifnull(cast(ROUND(sum(case jr.rec_type when '1' then jr .rec_money else 0 end),2) as char ), '0.00') outMoney,\n" +
+            " ifnull(cast(ROUND(sum(case jr.rec_type when '2' then jr .rec_money else 0 end),2) as char ), '0.00') inMoney\n" +
             " from jz_records jr  where   rec_ownerid =?1 and (jr.rec_date >= ?2 "  +
             "             and jr.rec_date<=?3) " ,nativeQuery = true)
     List<Map<String,Object>> queryRecordsSumByDate(String openId,String queryDate,String queryEndDate);
 
     @Query(value = "select a.outMoney,a.inMoney,jt.typename,jt.jz_base64,a.rec_jz_type_id  from (\n" +
-            " select    jr.rec_jz_type_id ,cast(sum(case jr.rec_type when '1' then jr .rec_money else 0 end) as char ) outMoney,\n" +
-            " cast(sum(case jr.rec_type when '2' then jr .rec_money else 0 end) as char ) inMoney\n" +
+            " select    jr.rec_jz_type_id ,cast(ROUND(sum(case jr.rec_type when '1' then jr .rec_money else 0 end),2) as char ) outMoney,\n" +
+            " cast(ROUND(sum(case jr.rec_type when '2' then jr .rec_money else 0 end),2) as char ) inMoney\n" +
             " from jz_records jr where jr.rec_ownerid =?1 and (jr.rec_date >= ?2  \n" +
             "                        and jr.rec_date<=?3)  group by jr.rec_jz_type_id \n" +
             " ) a left join (\n" +

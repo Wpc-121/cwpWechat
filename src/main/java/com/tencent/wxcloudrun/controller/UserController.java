@@ -52,6 +52,17 @@ public class UserController {
         return userService.userAdd(req);
     }
 
+    @MetCost("editTag")
+    @PostMapping("/editTag")
+    public ApiResponse editTag(@RequestBody JSONObject req){
+        return userService.editTags(req);
+    }
+    @MetCost("queryTags")
+    @PostMapping("/queryTags")
+    public ApiResponse queryTags(@RequestBody JSONObject req){
+        return userService.queryTags(req);
+    }
+
     @MetCost("userQuery")
     @PostMapping("/userQuery")
     public ApiResponse userQuery(@RequestBody JSONObject req){
