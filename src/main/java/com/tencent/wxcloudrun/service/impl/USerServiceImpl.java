@@ -3,9 +3,12 @@ package com.tencent.wxcloudrun.service.impl;
 import com.alibaba.fastjson.JSONObject;
 import com.tencent.wxcloudrun.Tools;
 import com.tencent.wxcloudrun.config.ApiResponse;
+import com.tencent.wxcloudrun.japEntity.JzTags;
 import com.tencent.wxcloudrun.japEntity.JzUsers;
+import com.tencent.wxcloudrun.japRepository.JzTagsRepository;
 import com.tencent.wxcloudrun.japRepository.jzUserRepostitory;
 import com.tencent.wxcloudrun.service.UserService;
+import com.tencent.wxcloudrun.utils.MyStringUtil;
 import org.apache.tomcat.util.http.fileupload.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,6 +18,7 @@ import org.springframework.stereotype.Service;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 
 @Service
 public class USerServiceImpl implements UserService {
@@ -24,11 +28,18 @@ public class USerServiceImpl implements UserService {
         this.logger = LoggerFactory.getLogger(USerServiceImpl.class);
         this.jzUserRepostitory = jzUserRepostitory;
     }
+
+    @Autowired
+    JzTagsRepository jzTagsRepository;
+
     @Value("${cwp.wechatCloudEnvId}")
     private String envId;
 
     @Autowired
     Tools tools;
+
+
+
     @Override
     public ApiResponse userlogin(JSONObject req) {
         logger.info("--userLogin req is {}----", req);
@@ -75,5 +86,30 @@ public class USerServiceImpl implements UserService {
             rsp.put("user",byUseropenid);
         }
         return ApiResponse.ok(rsp);
+    }
+
+    @Override
+    public ApiResponse editTags(JSONObject req) {
+        String openid = req.getString("openid");
+        String tagId = req.getString("tagid");
+        String name = req.getString("name");
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+        if(MyStringUtil.isNullOrEmpty(tagId)){
+            tagId = tools.getSeq("seq","TAG");
+        }
+        JzTags jzTags = new JzTags();
+        jzTags.setTagId(tagId);
+        jzTags.setTagName(name);
+        jzTags.setTagOwnerid(openid);
+        jzTags.setTagTime(sdf.format(new Date()));
+        JzTags save = jzTagsRepository.save(jzTags);
+        return ApiResponse.ok(save);
+    }
+
+    @Override
+    public ApiResponse queryTags(JSONObject req) {
+        String openid = req.getString("openid");
+        List<JzTags> allByTagOwneridOrderByTagId = jzTagsRepository.findAllByTagOwneridOrderByTagId(openid);
+        return ApiResponse.ok(allByTagOwneridOrderByTagId);
     }
 }
