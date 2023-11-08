@@ -19,6 +19,7 @@ import org.springframework.stereotype.Service;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class USerServiceImpl implements UserService {
@@ -109,7 +110,7 @@ public class USerServiceImpl implements UserService {
     @Override
     public ApiResponse queryTags(JSONObject req) {
         String openid = req.getString("openid");
-        List<JzTags> allByTagOwneridOrderByTagId = jzTagsRepository.findAllByTagOwneridOrderByTagId(openid);
+        List<Map<String, Object>> allByTagOwneridOrderByTagId = jzTagsRepository.querytagsByOpenid(openid);
         return ApiResponse.ok(allByTagOwneridOrderByTagId);
     }
 }
