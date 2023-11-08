@@ -10,14 +10,14 @@ import java.io.Serializable;
 /**
  * @Description  
  * @Author  linmengmeng
- * @Date 2023-09-27 16:59:08 
+ * @Date 2023-11-08 11:04:00 
  */
 
 @Entity
 @Table ( name ="jz_records" , schema = "")
 public class JzRecords  implements Serializable {
 
-	private static final long serialVersionUID =  8724368485081756239L;
+	private static final long serialVersionUID =  281583274686630527L;
 
 	@Id
    	@Column(name = "rec_id" )
@@ -52,6 +52,9 @@ public class JzRecords  implements Serializable {
 
    	@Column(name = "rec_del" )
 	private String recDel;
+
+   	@Column(name = "rec_tag_id" )
+	private String recTagId;
 
 	public String getRecId() {
 		return this.recId;
@@ -133,6 +136,14 @@ public class JzRecords  implements Serializable {
 		this.recDel = recDel;
 	}
 
+	public String getRecTagId() {
+		return this.recTagId;
+	}
+
+	public void setRecTagId(String recTagId) {
+		this.recTagId = recTagId;
+	}
+
 	@Override
 	public String toString() {
 		return "{" +
@@ -146,6 +157,7 @@ public class JzRecords  implements Serializable {
 					"recMoney='" + recMoney + '\'' +
 					"recOwnerid='" + recOwnerid + '\'' +
 					"recDel='" + recDel + '\'' +
+					"recTagId='" + recTagId + '\'' +
 				'}';
 	}
 
